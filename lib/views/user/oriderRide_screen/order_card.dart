@@ -1,3 +1,5 @@
+import 'package:bus_app/data/models/riders_model/rider_model.dart';
+import 'package:bus_app/data/models/user_model/user_model.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:bus_app/shared/shard_widjet/custom_button.dart';
 import 'package:bus_app/views/admian/admian_screens/the_rides/custom_wedget/custom_drob.dart';
@@ -5,8 +7,8 @@ import 'package:bus_app/views/user/oriderRide_screen/dropdowen_station_user.dart
 import 'package:flutter/material.dart';
 
 class OrderIteam extends StatelessWidget {
-  const OrderIteam({Key? key});
-
+  const OrderIteam({Key? key, required this.rideModel});
+  final RideModel rideModel;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,12 +28,11 @@ class OrderIteam extends StatelessWidget {
                 child: Container(
                   width: MediaQuery.of(context).size.width * .4,
                   height: 170,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage('assets/images/Rectangle 4.jpg'),
-                    ),
+                        fit: BoxFit.fill,
+                        image: NetworkImage(rideModel.image.toString())),
                   ),
                 ),
               ),
@@ -42,7 +43,7 @@ class OrderIteam extends StatelessWidget {
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 140),
+                    padding: EdgeInsets.only(left: 140),
                     child: Image.asset(
                       "assets/images/exclution.png",
                     ),
@@ -50,15 +51,15 @@ class OrderIteam extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    "Ahmed Mohamed",
+                  Text(
+                    rideModel.name.toString(),
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(
                     height: 0,
                   ),
                   Text(
-                    "20 LE",
+                    "${rideModel.price} LE",
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: AppColors.primeColor),

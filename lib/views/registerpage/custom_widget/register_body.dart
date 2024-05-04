@@ -1,11 +1,15 @@
 import 'dart:developer';
 
+import 'package:bus_app/manage/authmanage/cubit/authration_cubit.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:bus_app/shared/shard_widjet/custom_button.dart';
+import 'package:bus_app/shared/shard_widjet/state_widget.dart';
 import 'package:bus_app/views/registerpage/custom_widget/custom_passord_field.dart';
 import 'package:bus_app/views/registerpage/custom_widget/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 
 class RegisterBody extends StatelessWidget {
   RegisterBody({super.key});
@@ -61,6 +65,13 @@ class RegisterBody extends StatelessWidget {
                         height: 22,
                       ),
                       MyText(
+                        validator: (value) {
+                          if (value!.length != 11) {
+                            return "pleas enter 11 number";
+                          } else {
+                            return null;
+                          }
+                        },
                         controller: phone,
                         hintText: "Phone Number",
                         icon: Icon(
@@ -71,21 +82,47 @@ class RegisterBody extends StatelessWidget {
                       SizedBox(
                         height: 22,
                       ),
-                      PasswordTextField(),
+                      PasswordTextField(
+                        password: password,
+                      ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.07,
                       ),
-                      CustomButton(
-                        onPressed: () {
-                          if (formkey.currentState!.validate()) {
-                            log("message");
+                      BlocConsumer<AuthrationCubit, AuthrationState>(
+                        listener: (context, state) {
+                          if (state is AuthorizationSuccess) {
+                            context.loaderOverlay.hide();
                             GoRouter.of(context).pushReplacement('/user');
+                          } else if (state is AuthorizationFailure) {
+                            context.loaderOverlay.hide();
+                            return MySnackBar.showErrorMessage(
+                                context, state.errorMassage);
+                          } else {
+                            context.loaderOverlay.show(
+                              widgetBuilder: (progress) {
+                                return myLooding();
+                              },
+                            );
                           }
                         },
-                        hight: 50,
-                        width: double.infinity,
-                        backgroundColor: AppColors.buttonCooler,
-                        text: "Sign up",
+                        builder: (context, state) {
+                          return CustomButton(
+                            onPressed: () {
+                              if (formkey.currentState!.validate()) {
+                                BlocProvider.of<AuthrationCubit>(context)
+                                    .authorizationRegister(
+                                        name: userName.text,
+                                        password: password.text,
+                                        phone: phone.text,
+                                        emial: emial.text);
+                              }
+                            },
+                            hight: 50,
+                            width: double.infinity,
+                            backgroundColor: AppColors.buttonCooler,
+                            text: "Sign up",
+                          );
+                        },
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.05,
@@ -96,7 +133,11 @@ class RegisterBody extends StatelessWidget {
                           const Text("Already have an account ?"),
                           TextButton(
                             onPressed: () {
-                              GoRouter.of(context).pushReplacement("/login");
+                              try {
+                                context.go("/login", extra: "user");
+                              } on Exception catch (e) {
+                                log(e.toString());
+                              }
                             },
                             child: const Text(
                               "Login",

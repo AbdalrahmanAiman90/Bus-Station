@@ -4,12 +4,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class MyText extends StatefulWidget {
   MyText(
       {super.key,
+      this.validator,
       required this.hintText,
       required this.controller,
       required this.icon});
   TextEditingController controller;
   String hintText;
   Icon icon;
+  String? Function(String?)? validator;
   @override
   State<MyText> createState() => _MyTextState();
 }
@@ -17,7 +19,6 @@ class MyText extends StatefulWidget {
 class _MyTextState extends State<MyText> {
   bool? isObscure;
 
-  String? Function(String?)? validator;
   FocusNode _focusNode = FocusNode();
   bool _isIconVisible = true;
 
@@ -71,7 +72,7 @@ class _MyTextState extends State<MyText> {
 
         // Default icon
       ),
-      validator: validator ??
+      validator: widget.validator ??
           (value) {
             if (value!.isEmpty) {
               return "Please enter ${widget.hintText}";

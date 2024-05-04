@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PasswordTextField extends StatefulWidget {
+  TextEditingController password;
+  PasswordTextField({required this.password});
   @override
   _PasswordTextFieldState createState() => _PasswordTextFieldState();
 }
@@ -29,6 +31,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.password,
       obscureText: _obscureText,
       focusNode: _focusNode,
       cursorColor: Colors.black,
@@ -74,6 +77,8 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       validator: (value) {
         if (value!.isEmpty) {
           return "Please enter Password";
+        } else if (value.length < 8) {
+          return "the password must more than 8 ";
         } else {
           return null;
         }
