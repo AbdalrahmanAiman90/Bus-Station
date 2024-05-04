@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/material.dart';
 
 class CustomDownUser extends StatefulWidget {
-  const CustomDownUser({super.key});
+  const CustomDownUser({Key? key}) : super(key: key);
 
   @override
   State<CustomDownUser> createState() => _CustomDownState();
@@ -20,15 +20,21 @@ class _CustomDownState extends State<CustomDownUser> {
     'Al Ardia 187',
   ];
   String? selectedValue;
+
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
         isExpanded: true,
-        hint: Text(
-          'Stations ',
-          style: TextStyle(fontSize: 16, color: Colors.black),
-        ),
+        hint: selectedValue != null
+            ? Text(
+                selectedValue!,
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              )
+            : Text(
+                'Stations ',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
         items: items
             .asMap()
             .entries
@@ -54,13 +60,14 @@ class _CustomDownState extends State<CustomDownUser> {
                   ),
                 ),
               ],
-              // if (entry.key !=
-              //       items.length -
-              //           1)
             ),
           );
         }).toList(),
-        onChanged: (String? value) {},
+        onChanged: (String? value) {
+          setState(() {
+            selectedValue = value;
+          });
+        },
         buttonStyleData: ButtonStyleData(
           decoration: BoxDecoration(
             color: Colors.white,

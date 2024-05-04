@@ -4,6 +4,7 @@ import 'package:bus_app/data/models/user_model/user_model.dart';
 import 'package:bus_app/data/repos/user_repo/user_repo.dart';
 import 'package:bus_app/error/falur.dart';
 import 'package:bus_app/shared/api_serves.dart';
+import 'package:bus_app/shared/const.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
@@ -23,6 +24,7 @@ class UserRepoImplment extends UserRepo {
 
       var data = await apiServes.post(endpoint: endpoint, bodyRequst: body);
       UserModel userData = UserModel.fromJson(data);
+
       log(userData.token!);
       return right(userData);
     } on Exception catch (e) {
@@ -54,7 +56,7 @@ class UserRepoImplment extends UserRepo {
 
       var data = await apiServes.post(endpoint: endpoint, bodyRequst: body);
       UserModel userData = UserModel.fromJson(data);
-      log(userData.token!);
+
       return right(userData);
     } on Exception catch (e) {
       if (e is DioException) {

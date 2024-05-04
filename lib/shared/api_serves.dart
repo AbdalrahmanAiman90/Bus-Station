@@ -6,7 +6,7 @@ class ApiServes {
   final Dio dio;
   String _baseUrl = "https://bus-station-4yq5.onrender.com/api/";
 
-  ApiServes({required this.dio});
+  ApiServes(this.dio);
 
   Future<dynamic> post(
       {required String endpoint, Map<String, dynamic>? bodyRequst}) async {

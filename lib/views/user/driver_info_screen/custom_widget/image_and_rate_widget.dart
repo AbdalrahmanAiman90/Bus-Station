@@ -1,17 +1,24 @@
+import 'package:bus_app/data/models/driver_model/driver_model.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:go_router/go_router.dart';
 
 class imageAndRating extends StatelessWidget {
-  const imageAndRating({super.key});
-
+  const imageAndRating(
+      {super.key,
+      required this.image,
+      required this.intialRate,
+      required this.driverData});
+  final String image;
+  final num intialRate;
+  final DriverModel driverData;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const CircleAvatar(
-          backgroundImage: AssetImage("assets/images/actor.png"),
+        CircleAvatar(
+          backgroundImage: NetworkImage(image),
           radius: 80,
         ),
         Padding(
@@ -20,7 +27,7 @@ class imageAndRating extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               RatingBar.builder(
-                initialRating: 3,
+                initialRating: intialRate.toDouble(), //!
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
@@ -37,7 +44,8 @@ class imageAndRating extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  GoRouter.of(context).push('/commintscreen');
+                  GoRouter.of(context)
+                      .push('/commintscreen', extra: driverData);
                 },
                 child: Row(
                   children: [

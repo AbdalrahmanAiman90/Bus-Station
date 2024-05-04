@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppBarInfoScreen extends StatelessWidget {
-  const AppBarInfoScreen({super.key});
-
+  const AppBarInfoScreen({super.key, required this.nameDriver});
+  final String nameDriver;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,8 +21,8 @@ class AppBarInfoScreen extends StatelessWidget {
           SizedBox(
             width: MediaQuery.of(context).size.width * .15,
           ),
-          const Text(
-            "Ahmed Mohamed",
+          Text(
+            nameDriver,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ],

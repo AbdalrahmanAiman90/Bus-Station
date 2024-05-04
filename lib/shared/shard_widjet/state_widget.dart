@@ -25,8 +25,15 @@ class MySnackBar {
 
 myLooding() {
   return Center(
-    child: CircularProgressIndicator(
-      color: AppColors.primeColor,
+    child: Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.grey.withOpacity(.6),
+      child: Center(
+        child: CircularProgressIndicator(
+          color: AppColors.primeColor,
+        ),
+      ),
     ),
   );
 }

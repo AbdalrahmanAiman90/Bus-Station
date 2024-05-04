@@ -1,8 +1,12 @@
+import 'package:bus_app/data/models/driver_model/driver_model.dart';
+import 'package:bus_app/data/repos/driver_repo/driver_repo_implemnt.dart';
 import 'package:bus_app/data/repos/rider_repo/ride_repo_implemnt.dart';
 import 'package:bus_app/data/repos/user_repo/user_repo_implment.dart';
 import 'package:bus_app/manage/authmanage/cubit/authration_cubit.dart';
+import 'package:bus_app/manage/drivermanage/cubit/driver_cubit.dart';
 import 'package:bus_app/manage/ridesmanage/cubit/rides_cubit.dart';
 import 'package:bus_app/shared/api_serves.dart';
+import 'package:bus_app/shared/srver_locator.dart';
 import 'package:bus_app/views/Admian/admian_layout.dart';
 import 'package:bus_app/views/loginpage/login_screen.dart';
 import 'package:bus_app/views/onbording_screen/onbordingfirst.dart';
@@ -34,8 +38,7 @@ abstract class AppRouter {
       GoRoute(
         path: '/register',
         builder: (context, state) => BlocProvider(
-          create: (context) =>
-              AuthrationCubit(UserRepoImplment(ApiServes(dio: creatdio()))),
+          create: (context) => AuthrationCubit(getIt.get<UserRepoImplment>()),
           child: RegisterScreen(),
         ),
       ),
@@ -44,8 +47,7 @@ abstract class AppRouter {
         builder: (context, state) {
           final role = state.extra as String;
           return BlocProvider(
-            create: (context) =>
-                AuthrationCubit(UserRepoImplment(ApiServes(dio: creatdio()))),
+            create: (context) => AuthrationCubit(getIt.get<UserRepoImplment>()),
             child: LoginScreen(role: role),
           );
         },
@@ -57,23 +59,28 @@ abstract class AppRouter {
       GoRoute(
         path: '/user',
         builder: (context, state) => BlocProvider(
-          create: (context) => RidesCubit(
-            RideRepoImplemntion(
-              ApiServes(
-                dio: creatdio(),
-              ),
-            ),
-          )..fetchAllRides(),
+          create: (context) =>
+              RidesCubit(getIt.get<RideRepoImplemntion>())..fetchAllRides(),
           child: UserLayout(),
         ),
       ),
       GoRoute(
         path: '/driverinfo',
-        builder: (context, state) => DriverInfoScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              DriverCubit(DriverRepoImplemnt(ApiServes(creatdio()))),
+          child: DriverInfoScreen(driverid: state.extra as String),
+        ),
       ),
       GoRoute(
         path: '/commintscreen',
-        builder: (context, state) => CommintScreen(),
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              DriverCubit(DriverRepoImplemnt(ApiServes(creatdio()))),
+          child: CommintScreen(
+            driverData: state.extra as DriverModel,
+          ),
+        ),
       ),
     ],
   );
