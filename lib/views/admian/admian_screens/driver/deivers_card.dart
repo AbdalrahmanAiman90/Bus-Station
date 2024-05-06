@@ -1,10 +1,14 @@
+import 'package:bus_app/data/models/driver_model/driver_model.dart';
+import 'package:bus_app/data/models/riders_model/rider_model.dart';
+import 'package:bus_app/manage/drivermanage/cubit/driver_cubit.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class DriversCard extends StatelessWidget {
-  const DriversCard({super.key});
-
+  const DriversCard({required this.driverData});
+  final DriverModel driverData;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,7 +35,7 @@ class DriversCard extends StatelessWidget {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.fill,
-                          image: AssetImage('assets/images/Intersect.png'),
+                          image: NetworkImage(driverData.profileImg!),
                         ),
                       ),
                     ),
@@ -39,7 +43,7 @@ class DriversCard extends StatelessWidget {
                       width: 20,
                     ),
                     Text(
-                      "Ahmed Mohamed",
+                      driverData.name!,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                     ),
@@ -49,7 +53,8 @@ class DriversCard extends StatelessWidget {
                 Expanded(
                   child: IconButton(
                     onPressed: () {
-                      GoRouter.of(context).push("/driverinfo");
+                      GoRouter.of(context)
+                          .push("/driverinfo", extra: driverData.id);
                     },
                     icon: Icon(
                       Icons.arrow_forward_ios_outlined,

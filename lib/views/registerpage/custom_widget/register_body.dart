@@ -92,7 +92,8 @@ class RegisterBody extends StatelessWidget {
                         listener: (context, state) {
                           if (state is AuthorizationSuccess) {
                             context.loaderOverlay.hide();
-                            GoRouter.of(context).pushReplacement('/user');
+                            GoRouter.of(context).pushReplacement('/user',
+                                extra: state.userData.data!.result!.name);
                           } else if (state is AuthorizationFailure) {
                             context.loaderOverlay.hide();
                             return MySnackBar.showErrorMessage(
@@ -107,9 +108,9 @@ class RegisterBody extends StatelessWidget {
                         },
                         builder: (context, state) {
                           return CustomButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (formkey.currentState!.validate()) {
-                                BlocProvider.of<AuthrationCubit>(context)
+                                await BlocProvider.of<AuthrationCubit>(context)
                                     .authorizationRegister(
                                         name: userName.text,
                                         password: password.text,

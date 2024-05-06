@@ -1,14 +1,21 @@
+import 'dart:developer';
+
 import 'package:bus_app/data/models/riders_model/rider_model.dart';
 import 'package:bus_app/data/models/user_model/user_model.dart';
+import 'package:bus_app/manage/requstmanage/cubit/requst_manager_cubit.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:bus_app/shared/shard_widjet/custom_button.dart';
+import 'package:bus_app/shared/shard_widjet/state_widget.dart';
 import 'package:bus_app/views/admian/admian_screens/the_rides/custom_wedget/custom_drob.dart';
 import 'package:bus_app/views/user/oriderRide_screen/dropdowen_station_user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderIteam extends StatelessWidget {
-  const OrderIteam({Key? key, required this.rideModel});
+  OrderIteam({Key? key, required this.rideModel, required this.isSelected});
   final RideModel rideModel;
+  String? station;
+  bool isSelected;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -77,12 +84,37 @@ class OrderIteam extends StatelessWidget {
                   SizedBox(
                     height: 18,
                   ),
-                  CustomButton(
-                      onPressed: () {},
-                      hight: 40,
-                      width: MediaQuery.of(context).size.width * .4,
-                      backgroundColor: AppColors.buttonCooler,
-                      text: "Request")
+                  BlocConsumer<RequstManagerCubit, RequstManagerState>(
+                    builder: (context, state) {
+                      return CustomButton(
+                          onPressed: () {
+                            BlocProvider.of<RequstManagerCubit>(context)
+                                .createRideRequst(
+                              idRide: rideModel.idRide!,
+                            );
+                          },
+                          hight: 40,
+                          width: MediaQuery.of(context).size.width * .4,
+                          backgroundColor: isSelected &&
+                                  BlocProvider.of<RequstManagerCubit>(context)
+                                          .stutsRequst ==
+                                      "Pending"
+                              ? AppColors.primeColor
+                              : AppColors.buttonCooler,
+                          text: BlocProvider.of<RequstManagerCubit>(context)
+                                          .stutsRequst ==
+                                      "Pending" &&
+                                  isSelected
+                              ? "wating..."
+                              : "Request");
+                    },
+                    listener: (BuildContext context, RequstManagerState state) {
+                      if (state is RequstManagerCreatRequstSuccess) {
+                        MySnackBar.showSuccsesMessage(context,
+                            "wait for accept from Driver to ${BlocProvider.of<RequstManagerCubit>(context).station}");
+                      }
+                    },
+                  )
                 ],
               )
             ],

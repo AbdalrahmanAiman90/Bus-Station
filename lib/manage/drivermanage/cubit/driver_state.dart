@@ -13,12 +13,22 @@ final class DriverSuccess extends DriverState {
   DriverSuccess(this.driverModel);
 }
 
+final class AllDriverSuccess extends DriverState {
+  List<DriverModel> driverModel;
+
+  AllDriverSuccess(this.driverModel);
+}
+
 final class DriverFailure extends DriverState {
   String errorMassage;
   DriverFailure(this.errorMassage);
 }
 
-final class DriverSuccessUpdated extends DriverState {
-  List<String> commints;
-  DriverSuccessUpdated(this.commints);
+final class CommintLooding extends DriverState {}
+
+final class CommintSuccses extends DriverState {}
+
+final class CommintFial extends DriverState {
+  String errorMassage;
+  CommintFial(this.errorMassage);
 }

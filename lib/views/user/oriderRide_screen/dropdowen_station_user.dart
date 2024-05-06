@@ -1,6 +1,8 @@
+import 'package:bus_app/manage/requstmanage/cubit/requst_manager_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomDownUser extends StatefulWidget {
   const CustomDownUser({Key? key}) : super(key: key);
@@ -66,6 +68,8 @@ class _CustomDownState extends State<CustomDownUser> {
         onChanged: (String? value) {
           setState(() {
             selectedValue = value;
+            BlocProvider.of<RequstManagerCubit>(context).station =
+                selectedValue ?? "Khitan 34";
           });
         },
         buttonStyleData: ButtonStyleData(

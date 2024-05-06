@@ -1,8 +1,12 @@
+import 'package:bus_app/manage/drivermanage/cubit/driver_cubit.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentTextField extends StatefulWidget {
-  const CommentTextField({super.key});
+  const CommentTextField({Key? key, required this.id}) : super(key: key);
+
+  final String id;
 
   @override
   State<CommentTextField> createState() => _CommentTextFieldState();
@@ -11,6 +15,7 @@ class CommentTextField extends StatefulWidget {
 class _CommentTextFieldState extends State<CommentTextField> {
   late FocusNode _focusNode;
   bool isFocused = false;
+  TextEditingController commintText = TextEditingController();
 
   @override
   void initState() {
@@ -54,35 +59,58 @@ class _CommentTextFieldState extends State<CommentTextField> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 18),
-                  child: TextField(
-                    focusNode: _focusNode,
-                    decoration: InputDecoration(
-                      hintText: 'Write your comment',
-                      hintStyle: TextStyle(
-                        color: Color.fromARGB(201, 158, 158, 158),
-                      ),
-                      border: InputBorder.none,
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(150),
-                        borderSide: BorderSide(color: Color(0xFF397162)),
-                      ),
-                      contentPadding: isFocused
-                          ? EdgeInsets.symmetric(horizontal: 10)
-                          : EdgeInsets.symmetric(horizontal: 80),
-                      // Center align the text
-                      alignLabelWithHint: true,
-                    ),
+                  child: BlocBuilder<DriverCubit, DriverState>(
+                    builder: (context, state) {
+                      return TextField(
+                        controller: commintText,
+                        focusNode: _focusNode,
+                        decoration: InputDecoration(
+                          hintText: state is CommintLooding
+                              ? "Sending..."
+                              : 'Write your comment',
+                          hintStyle: TextStyle(
+                            color: Color.fromARGB(201, 158, 158, 158),
+                          ),
+                          border: InputBorder.none,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(150),
+                            borderSide: BorderSide(color: Color(0xFF397162)),
+                          ),
+                          contentPadding: isFocused
+                              ? EdgeInsets.symmetric(horizontal: 10)
+                              : EdgeInsets.symmetric(horizontal: 80),
+                          // Center align the text
+                          alignLabelWithHint: true,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
               if (isFocused)
                 IconButton(
-                  icon: Icon(
-                    Icons.send,
-                    color: AppColors.primeColor,
+                  icon: BlocBuilder<DriverCubit, DriverState>(
+                    builder: (context, state) {
+                      return state is CommintLooding
+                          ? CircularProgressIndicator(
+                              color: AppColors.primeColor)
+                          : Icon(
+                              Icons.send,
+                              color: AppColors.primeColor,
+                            );
+                    },
                   ),
-                  onPressed: () {
-                    // Add your send button logic here
+                  onPressed: () async {
+                    // Set a short delay to allow the circular progress indicator to be displayed
+                    Future.delayed(Duration(milliseconds: 1200), () {
+                      // Unfocus the text field after the delay
+                      FocusScope.of(context).unfocus();
+                    });
+
+                    // Set the state to indicate that the comment is being sent
+                    BlocProvider.of<DriverCubit>(context)
+                        .sendCoomint(widget.id, commintText.text);
+                    commintText.clear();
                   },
                 ),
             ],

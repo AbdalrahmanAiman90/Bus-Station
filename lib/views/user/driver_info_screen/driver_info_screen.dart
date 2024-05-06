@@ -12,7 +12,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DriverInfoScreen extends StatefulWidget {
   const DriverInfoScreen({super.key, required this.driverid});
   final String driverid;
-
   @override
   State<DriverInfoScreen> createState() => _DriverInfoScreenState();
 }
@@ -31,7 +30,9 @@ class _DriverInfoScreenState extends State<DriverInfoScreen> {
         body: BlocBuilder<DriverCubit, DriverState>(
           builder: (context, state) {
             return state is DriverSuccess
-                ? DriverInfoBody(driverData: state.driverModel)
+                ? DriverInfoBody(
+                    driverData: state.driverModel,
+                  )
                 : myLooding();
           },
         ),

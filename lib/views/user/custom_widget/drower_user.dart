@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 Widget myDrowerUser({
   required Function(int index, String tittel) onItemTapped,
   required double widthScreen,
+  required String name,
 }) {
   return Drawer(
     width: widthScreen * .535,
@@ -16,8 +17,8 @@ Widget myDrowerUser({
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(
-            "Ahmed Mohmed",
+          Text(
+            name,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
           const Divider(

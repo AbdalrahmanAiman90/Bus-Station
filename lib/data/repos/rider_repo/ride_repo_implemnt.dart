@@ -1,13 +1,15 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:bus_app/data/models/riders_model/rider_model.dart';
-import 'package:bus_app/data/models/user_model/user_model.dart';
 import 'package:bus_app/data/repos/rider_repo/ride_repo.dart';
 import 'package:bus_app/error/falur.dart';
 import 'package:bus_app/shared/api_serves.dart';
 import 'package:bus_app/shared/const.dart';
+import 'package:cloudinary_flutter/cloudinary_object.dart';
+import 'package:cloudinary_url_gen/cloudinary.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RideRepoImplemntion extends RideRepo {
   final ApiServes apiServes;
@@ -35,6 +37,35 @@ class RideRepoImplemntion extends RideRepo {
         // log(e.toString());
         return left(ServerFailuar(e.toString())); //! return
       }
+    }
+  }
+
+  @override
+  Future<Either<Failure, RideModel>> creatRide(
+      String name, String price, image) async {
+    try {
+      String endpoint = "ride/createone";
+
+      Map<String, dynamic> headerRequest = {
+        'Cookie': token,
+      };
+
+      FormData formData =
+          FormData.fromMap({"image": image, "name": name, "price": price});
+
+      var data = await apiServes.post(
+          endpoint: endpoint,
+          headerRequst: headerRequest,
+          bodyRequst: formData);
+
+      RideModel rideData = RideModel.fromJson(data);
+      return right(rideData);
+    } on DioException catch (e) {
+      // Handle DioError separately
+      return left(ServerFailuar.fromDioError(e));
+    } catch (e) {
+      // Handle other exceptions
+      return left(ServerFailuar(e.toString()));
     }
   }
 }

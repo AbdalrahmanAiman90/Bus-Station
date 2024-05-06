@@ -9,19 +9,23 @@ class ApiServes {
   ApiServes(this.dio);
 
   Future<dynamic> post(
-      {required String endpoint, Map<String, dynamic>? bodyRequst}) async {
+      {required String endpoint,
+      Object? bodyRequst,
+      Map<String, dynamic>? headerRequst}) async {
     // Make a POST request using Dio
     Response response = await dio.post(
       _baseUrl + endpoint,
       data: bodyRequst,
+      options: Options(headers: headerRequst),
     );
 
     return response.data;
   }
 
-  Future<dynamic> get(
-      {required String endPoint,
-      required Map<String, dynamic>? headerRequst}) async {
+  Future<dynamic> get({
+    required String endPoint,
+    required Map<String, dynamic>? headerRequst,
+  }) async {
     log("message");
     // do requst
     var response = await dio.get(_baseUrl + endPoint,

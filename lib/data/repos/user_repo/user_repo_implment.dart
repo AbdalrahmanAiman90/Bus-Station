@@ -24,7 +24,7 @@ class UserRepoImplment extends UserRepo {
 
       var data = await apiServes.post(endpoint: endpoint, bodyRequst: body);
       UserModel userData = UserModel.fromJson(data);
-
+      token = "jwt=${userData.token}";
       log(userData.token!);
       return right(userData);
     } on Exception catch (e) {
@@ -56,7 +56,8 @@ class UserRepoImplment extends UserRepo {
 
       var data = await apiServes.post(endpoint: endpoint, bodyRequst: body);
       UserModel userData = UserModel.fromJson(data);
-
+      token = "jwt=${userData.token}";
+      log(token.toString());
       return right(userData);
     } on Exception catch (e) {
       if (e is DioException) {

@@ -1,19 +1,20 @@
-import 'dart:developer';
-
-import 'package:bus_app/data/repos/rider_repo/ride_repo.dart';
-import 'package:bus_app/data/repos/rider_repo/ride_repo_implemnt.dart';
 import 'package:bus_app/manage/ridesmanage/cubit/rides_cubit.dart';
-import 'package:bus_app/shared/api_serves.dart';
 import 'package:bus_app/shared/shard_widjet/state_widget.dart';
-import 'package:bus_app/views/user/custom_widget/drower_user.dart';
 import 'package:bus_app/views/user/oriderRide_screen/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
-class OrderScreen extends StatelessWidget {
+class OrderScreen extends StatefulWidget {
   const OrderScreen({Key? key});
+
+  @override
+  _OrderScreenState createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends State<OrderScreen> {
+  int selectedIndex = -1; // Track the index of the selected item
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +31,22 @@ class OrderScreen extends StatelessWidget {
           builder: (context, state) {
             if (state is RidesSuccess) {
               return ListView.builder(
-                itemCount: state
-                    .allRides.length, // Adjust the number of cards as needed
+                itemCount: state.allRides.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    child: OrderIteam(rideModel: state.allRides[index]),
                     onTap: () {
+                      setState(() {
+                        // Update selectedIndex when an item is tapped
+                        selectedIndex = index;
+                      });
                       GoRouter.of(context).push("/driverinfo",
                           extra: state.allRides[index].driver);
                     },
+                    child: OrderIteam(
+                      rideModel: state.allRides[index],
+                      isSelected: selectedIndex ==
+                          index, // Check if current item is selected
+                    ),
                   );
                 },
               );

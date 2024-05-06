@@ -1,10 +1,11 @@
+import 'package:bus_app/data/models/riders_model/rider_model.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:bus_app/views/admian/admian_screens/the_rides/custom_wedget/custom_drob.dart';
 import 'package:flutter/material.dart';
 
 class RideCard extends StatelessWidget {
-  const RideCard({Key? key});
-
+  const RideCard({Key? key, required this.rideModel});
+  final RideModel rideModel;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,11 +25,11 @@ class RideCard extends StatelessWidget {
               Container(
                 width: 146,
                 height: 170,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   image: DecorationImage(
                     fit: BoxFit.fill,
-                    image: AssetImage('assets/images/Rectangle 4.jpg'),
+                    image: NetworkImage(rideModel.image.toString()),
                   ),
                 ),
               ),
@@ -38,15 +39,15 @@ class RideCard extends StatelessWidget {
               ),
               Column(
                 children: [
-                  const Text(
-                    "Ahmed Mohamed",
+                  Text(
+                    rideModel.name.toString(),
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
                   Text(
-                    "20 LE",
+                    "${rideModel.price} LE",
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: AppColors.primeColor),

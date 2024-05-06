@@ -1,10 +1,15 @@
+import 'package:bus_app/data/models/requst_model/getall_requst/getall_requsts.dart';
+import 'package:bus_app/manage/authmanage/notifacationmanage/cubit/notifaction_cubit_cubit.dart';
+import 'package:bus_app/manage/requstmanage/cubit/requst_manager_cubit.dart';
+import 'package:bus_app/manage/ridesmanage/cubit/rides_cubit.dart';
 import 'package:bus_app/shared/app_style.dart';
 import 'package:bus_app/shared/shard_widjet/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RequstCard extends StatelessWidget {
-  const RequstCard({super.key});
-
+  RequstCard({required this.requstData});
+  GetAllRqustModel requstData;
   @override
   Widget build(BuildContext context) {
     final double widthSreen = MediaQuery.of(context).size.width;
@@ -29,12 +34,12 @@ class RequstCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Ahmed Mohmed",
+                        requstData.ride!.name!,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        "Alexandria",
+                        requstData.station ?? "Hawally 66",
                         style: TextStyle(color: AppColors.primeColor),
                       ),
                     ],
@@ -47,14 +52,24 @@ class RequstCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await BlocProvider.of<RequstManagerCubit>(context)
+                            .accept(idreqist: requstData.idRequst!);
+                        await BlocProvider.of<RequstManagerCubit>(context)
+                            .getAllRequst();
+                      },
                       backgroundColor: AppColors.buttonCooler,
                       hight: 50,
                       width: widthSreen * .4,
                       text: "Accept",
                     ),
                     CustomButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await BlocProvider.of<RequstManagerCubit>(context)
+                            .reject(idreqist: requstData.idRequst!);
+                        await BlocProvider.of<RequstManagerCubit>(context)
+                            .getAllRequst();
+                      },
                       backgroundColor: AppColors.rejectColor,
                       hight: 50,
                       width: widthSreen * .4,

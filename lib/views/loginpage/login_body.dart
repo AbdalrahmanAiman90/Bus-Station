@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bus_app/manage/authmanage/cubit/authration_cubit.dart';
 import 'package:bus_app/shared/app_style.dart';
+import 'package:bus_app/shared/const.dart';
 import 'package:bus_app/shared/shard_widjet/custom_button.dart';
 import 'package:bus_app/shared/shard_widjet/state_widget.dart';
 import 'package:bus_app/views/registerpage/custom_widget/custom_passord_field.dart';
@@ -61,13 +62,17 @@ class LoginBody extends StatelessWidget {
                     context.loaderOverlay.hide();
                     if (role == "admian") {
                       if (state.userData.data!.result!.name == "admin") {
+                        isAdmin = true;
                         GoRouter.of(context).pushReplacement("/admian");
                       } else {
+                        isAdmin = false;
+
                         MySnackBar.showErrorMessage(context, "You Not Admin");
                       }
                     } else {
                       if (state.userData.data!.result!.name != "admin") {
-                        GoRouter.of(context).pushReplacement("/user");
+                        GoRouter.of(context).pushReplacement("/user",
+                            extra: state.userData.data!.result!.name);
                       } else {
                         MySnackBar.showErrorMessage(context, "You Not user");
                       }

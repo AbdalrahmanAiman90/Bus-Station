@@ -37,15 +37,13 @@ class DriverModel {
 }
 
 class Review {
-  String? sId;
   String? title;
   int? rating;
   String? driverId;
 
-  Review({this.sId, this.title, this.rating, this.driverId});
+  Review({this.title, this.rating, this.driverId});
 
   Review.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
     title = json['title'];
     rating = json['rating'];
     driverId = json['driverId'];
@@ -53,7 +51,6 @@ class Review {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
     data['title'] = this.title;
     data['rating'] = this.rating;
     data['driverId'] = this.driverId;

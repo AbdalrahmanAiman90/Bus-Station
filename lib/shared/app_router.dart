@@ -3,6 +3,7 @@ import 'package:bus_app/data/repos/driver_repo/driver_repo_implemnt.dart';
 import 'package:bus_app/data/repos/rider_repo/ride_repo_implemnt.dart';
 import 'package:bus_app/data/repos/user_repo/user_repo_implment.dart';
 import 'package:bus_app/manage/authmanage/cubit/authration_cubit.dart';
+import 'package:bus_app/manage/creatRide/cubit/create_ride_cubit.dart';
 import 'package:bus_app/manage/drivermanage/cubit/driver_cubit.dart';
 import 'package:bus_app/manage/ridesmanage/cubit/rides_cubit.dart';
 import 'package:bus_app/shared/api_serves.dart';
@@ -54,14 +55,42 @@ abstract class AppRouter {
       ),
       GoRoute(
         path: '/admian',
-        builder: (context, state) => AdmianLayout(),
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider<RidesCubit>(
+              create: (context) =>
+                  RidesCubit(getIt.get<RideRepoImplemntion>())..fetchAllRides(),
+            ),
+            BlocProvider<DriverCubit>(
+              create: (context) => DriverCubit(
+                DriverRepoImplemnt(
+                  ApiServes(
+                    creatdio(),
+                  ),
+                ),
+              )..fetchAllDriverData(),
+            ),
+            BlocProvider<CreateRideCubit>(
+              create: (context) => CreateRideCubit(
+                RideRepoImplemntion(
+                  ApiServes(
+                    creatdio(),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          child: AdmianLayout(),
+        ),
       ),
       GoRoute(
         path: '/user',
         builder: (context, state) => BlocProvider(
           create: (context) =>
               RidesCubit(getIt.get<RideRepoImplemntion>())..fetchAllRides(),
-          child: UserLayout(),
+          child: UserLayout(
+            userName: state.extra as String,
+          ),
         ),
       ),
       GoRoute(
@@ -78,7 +107,7 @@ abstract class AppRouter {
           create: (context) =>
               DriverCubit(DriverRepoImplemnt(ApiServes(creatdio()))),
           child: CommintScreen(
-            driverData: state.extra as DriverModel,
+            driverCommint: state.extra as DriverModel,
           ),
         ),
       ),

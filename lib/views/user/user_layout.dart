@@ -8,8 +8,8 @@ import 'package:bus_app/views/user/oriderRide_screen/order_screen.dart';
 import 'package:flutter/material.dart';
 
 class UserLayout extends StatefulWidget {
-  const UserLayout({super.key});
-
+  const UserLayout({super.key, required this.userName});
+  final String userName;
   @override
   State<UserLayout> createState() => _UserLayoutState();
 }
@@ -60,6 +60,7 @@ class _UserLayoutState extends State<UserLayout> {
         ),
         drawer: myDrowerUser(
             onItemTapped: _onSelectItem,
+            name: widget.userName,
             widthScreen: MediaQuery.of(context).size.width),
         body: _getDrawerItemWidget(_selectedDrawerIndex),
       ),
